@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài tập 38 - Game kiểm tra tốc độ</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 20px; }
+        #arena { width: 600px; height: 400px; background: #222; position: relative; margin: 15px auto; border-radius: 8px; }
+        #target { width: 40px; height: 40px; background: red; border-radius: 50%; position: absolute; display: none; cursor: pointer; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Game Kiểm Tra Tốc Độ</h2>
+    <p>Điểm số: <span id="score">0</span> | Thời gian: <span id="timer">30</span>s</p>
+    
+    <div id="arena">
+        <div id="target"></div>
+    </div>
+
+    <button id="start-btn" onclick="startGame()">Bắt đầu trò chơi</button>
+
+    <script>
+        const arena = document.getElementById('arena');
+        const target = document.getElementById('target');
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const startBtn = document.getElementById('start-btn');
+
+        let score = 0, time = 30, timerInt, moveTimeout;
+
+        function startGame() {
+            score = 0; time = 30;
+            scoreEl.textContent = score;
+            timerEl.textContent = time;
+            startBtn.disabled = true;
+            target.style.display = 'block';
+
+            moveTarget();
+            timerInt = setInterval(() => {
+                time--;
+                timerEl.textContent = time;
+                if (time <= 0) endGame();
+            }, 1000);
+        }
+
+        function moveTarget() {
+            clearTimeout(moveTimeout);
+            target.style.left = Math.floor(Math.random() * 560) + 'px';
+            target.style.top = Math.floor(Math.random() * 360) + 'px';
+            moveTimeout = setTimeout(moveTarget, 1000);
+        }
+
+        target.addEventListener('click', () => {
+            if (time > 0) {
+                score++;
+                scoreEl.textContent = score;
+                moveTarget();
+            }
+        });
+
+        function endGame() {
+            clearInterval(timerInt);
+            clearTimeout(moveTimeout);
+            target.style.display = 'none';
+            startBtn.disabled = false;
+            alert(`Hết giờ! Tổng số điểm của bạn: ${score}`);
+        }
+    </script>
+</body>
+</html>
